@@ -3,17 +3,16 @@ package com.realityexpander.fileupload
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.realityexpander.fileupload.ui.theme.FileUploadTheme
 import java.io.File
 
@@ -27,10 +26,13 @@ class MainActivity : ComponentActivity() {
 
                 val viewModel = viewModel<FileViewModel>()
 
-                Box(
+                Column(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    Arrangement.SpaceAround,
+                    Alignment.CenterHorizontally
                 ) {
+                    val downloadedFile by viewModel.downloadedFile.observeAsState()
+
                     Button(onClick = {
 
                         // this would normally done in another class that has the application context injected by dagger hilt
@@ -49,6 +51,24 @@ class MainActivity : ComponentActivity() {
 
                     }) {
                         Text("Upload Image")
+                    }
+                    Spacer(Modifier.height(16.dp))
+
+                    Button(onClick = {
+                        // this would normally done in another class that has the application context injected by dagger hilt
+                        viewModel.downloadImage("chrisyoung.jpeg")
+
+                    }) {
+                        Text("Download Image")
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                    if(downloadedFile != null) {
+                        AsyncImage(
+                            model = downloadedFile,
+                            modifier = Modifier.fillMaxSize(),
+                            contentDescription = null
+                        )
                     }
                 }
 

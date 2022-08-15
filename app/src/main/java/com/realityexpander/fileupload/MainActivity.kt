@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     Alignment.CenterHorizontally
                 ) {
                     val downloadedFile by viewModel.downloadedFile.observeAsState()
+                    val error by viewModel.error.observeAsState()
 
                     Button(onClick = {
 
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     }
                     Spacer(Modifier.height(16.dp))
 
+                    // Download a file from our Ktor server
                     Button(onClick = {
                         // this would normally done in another class that has the application context injected by dagger hilt
                         viewModel.downloadImage("chrisyoung.jpeg")
@@ -62,13 +64,31 @@ class MainActivity : ComponentActivity() {
                         Text("Download Image")
                     }
 
-                    Spacer(Modifier.height(16.dp))
+                    // Clear the cache
+                    Button(onClick = {
+                        // delete all the files in the cache directory(including the cache directory itself)
+                        if(cacheDir.deleteRecursively()) {
+                            // if successfully deleted all files then recreate the cache directory
+                            cacheDir.mkdir()
+                        }
+                    }) {
+                        Text("Clear Cache")
+                    }
+
+                    // Show the downloaded file
                     if(downloadedFile != null) {
+                        Spacer(Modifier.height(16.dp))
                         AsyncImage(
                             model = downloadedFile,
                             modifier = Modifier.fillMaxSize(),
                             contentDescription = null
                         )
+                    }
+
+                    // Show error
+                    error?.let { error ->
+                        Spacer(Modifier.height(16.dp))
+                        Text(error)
                     }
                 }
 

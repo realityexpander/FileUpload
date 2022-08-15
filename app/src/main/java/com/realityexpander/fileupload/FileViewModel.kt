@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -16,22 +14,30 @@ class FileViewModel(
     private val _downloadedFile = MutableLiveData<File?>()
     val downloadedFile = _downloadedFile as LiveData<File?>
 
+    private val _error = MutableLiveData<String?>()
+    val error = _error as LiveData<String?>
+
     fun uploadImage(file: File, fileName: String) {
         viewModelScope.launch {
-            repository.uploadImage(file, fileName, "Chris Test")
+            try {
+                repository.uploadImage(file, fileName, "Chris Test")
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _error.value = e.message
+            }
         }
     }
 
     fun downloadImage(fileName: String) {
         viewModelScope.launch {
-//            repository.downloadImage(fileName) { file ->
-//                // Must set the mutableLiveData value in the main thread
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    _downloadedFile.value = file
-//                }
-//            }
-
-            _downloadedFile.value = repository.downloadImage2(fileName)
+            try {
+                _error.value = null
+                _downloadedFile.value = repository.downloadImage(fileName)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _downloadedFile.value = null
+                _error.value = e.message
+            }
         }
     }
 }

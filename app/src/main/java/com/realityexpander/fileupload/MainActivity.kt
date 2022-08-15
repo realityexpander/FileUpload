@@ -17,6 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.realityexpander.fileupload.ui.theme.FileUploadTheme
 import java.io.File
 
+// Server is here: https://github.com/realityexpander/KtorFileUpload
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

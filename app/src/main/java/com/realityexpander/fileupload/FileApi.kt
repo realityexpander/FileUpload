@@ -31,6 +31,7 @@ interface FileApi {
     )
 
     companion object {
+        // Replace with your own local IP for the server
         const val BASE_URL = "http://192.168.0.186:8080/"  // use trailing slash
 
         val instance by lazy {

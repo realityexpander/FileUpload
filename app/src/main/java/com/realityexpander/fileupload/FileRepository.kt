@@ -15,7 +15,7 @@ class FileRepository {
             FileApi.instance.uploadImage(
                 image = MultipartBody.Part
                     .createFormData(
-                        "image_file",  // part.name
+                        "image_file",  // part.name for this @Part
                         fileName, // original name of file on client side, on server is `part.originalFileName`
                         file.asRequestBody("image/jpeg".toMediaType())
                     ),
